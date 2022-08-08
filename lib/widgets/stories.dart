@@ -12,6 +12,7 @@ class Stories extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [

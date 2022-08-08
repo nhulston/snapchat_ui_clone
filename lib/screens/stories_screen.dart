@@ -32,6 +32,7 @@ class _StoriesScreenState extends State<StoriesScreen> {
             right: 0,
             height: MediaQuery.of(context).size.height - 100 - (Platform.isIOS ? 90 : 60),
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

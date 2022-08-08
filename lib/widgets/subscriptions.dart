@@ -3,8 +3,6 @@ import 'package:snapchat_ui_clone/widgets/subscription.dart';
 
 import '../data.dart';
 import '../models/article.dart';
-import '../models/friend.dart';
-import '../style.dart';
 
 class Subscriptions extends StatelessWidget {
   const Subscriptions({Key? key}) : super(key: key);
@@ -12,6 +10,7 @@ class Subscriptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
