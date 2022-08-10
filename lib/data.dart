@@ -21,68 +21,66 @@ class Data {
   ];
 
   static List<Article> subscriptions = [
+    Article('The Washington Post',
+        'Opinion | What\'s up with Amnesty International and its moral myopia on Ukraine?'),
     Article(
-        name: 'The Washington Post',
-        description:
-            'Opinion | What\'s up with Amnesty International and its moral myopia on Ukraine?'),
-    Article(
-      name: 'The Telegraph',
-      description: 'Teens might have to study maths and English after GCSE.',
+      'The Telegraph',
+      'Teens might have to study maths and English after GCSE.',
     ),
     Article(
-      name: 'LAD BIBLE',
-      description: 'Fans Angry With Kim K Over Sus Body Scan 👀',
+      'LAD BIBLE',
+      'Fans Angry With Kim K Over Sus Body Scan 👀',
     ),
     Article(
-      name: 'staytuned',
-      description: 'A virtual Sunday service',
+      'staytuned',
+      'A virtual Sunday service',
     ),
     Article(
-      name: 'WORLD STAR',
-      description: 'Kanye West Trolls "Skete" After Break Up With Kim!',
+      'WORLD STAR',
+      'Kanye West Trolls "Skete" After Break Up With Kim!',
     ),
   ];
 
   static List<Article> discovers = [
     Article(
-      name: 'EUROPE ON AMERICA',
-      description: 'European Girls Think American Boys Are...',
+      'EUROPE ON AMERICA',
+      'European Girls Think American Boys Are...',
     ),
     Article(
-      name: 'cbcnews',
-      description: 'The boat started taking on water when it jumped in',
+      'cbcnews',
+      'The boat started taking on water when it jumped in',
     ),
     Article(
-      name: 'INSIDER',
-      description: 'Frank Ocean has released a \$25,000...',
+      'INSIDER',
+      'Frank Ocean has released a \$25,000...',
     ),
     Article(
-      name: 'Refresh',
-      description: 'Dana White tells us the real reason why Jake pulled out!',
+      'Refresh',
+      'Dana White tells us the real reason why Jake pulled out!',
     ),
     Article(
-      name: 'WSJ',
-      description: 'Data Show Gender Pay Gap Opens Early',
+      'WSJ',
+      'Data Show Gender Pay Gap Opens Early',
     ),
     Article(
-      name: 'WORLDNEWS',
-      description: 'China Could Crush Russia, End War In Ukraine',
+      'WORLDNEWS',
+      'China Could Crush Russia, End War In Ukraine',
     ),
     Article(
-      name: 'TMZ',
-      description: 'FDA Checks On TikTok Viral Pink Sauce',
+      'TMZ',
+      'FDA Checks On TikTok Viral Pink Sauce',
     ),
     Article(
-      name: 'NEWS INSIDER',
-      description: 'How Illegal Items Are Destroyed At Airports',
+      'NEWS INSIDER',
+      'How Illegal Items Are Destroyed At Airports',
     ),
     Article(
-      name: 'ANSWERS',
-      description: '"Birds Aren\'t Real"',
+      'ANSWERS',
+      '"Birds Aren\'t Real"',
     ),
     Article(
-      name: 'U N S E E N',
-      description: '911 Hangs Up On Girl Missing for 10 Years!',
+      'U N S E E N',
+      '911 Hangs Up On Girl Missing for 10 Years!',
     ),
   ];
 }
