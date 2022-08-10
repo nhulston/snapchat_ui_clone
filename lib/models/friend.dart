@@ -1,8 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import '../style.dart';
-
 class Friend {
   Friend(this.image, this.name, this.status, this.time, this.streak);
 
