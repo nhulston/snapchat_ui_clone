@@ -1,20 +1,15 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:snapchat_ui_clone/screens/camera_screen.dart';
-import 'package:snapchat_ui_clone/screens/chats_screen.dart';
-import 'package:snapchat_ui_clone/screens/stories_screen.dart';
-import 'package:snapchat_ui_clone/screens/temp_screen.dart';
+import 'package:photo_manager/photo_manager.dart';
+import 'package:snapchat_ui_clone/pages/memories_page.dart';
+import 'package:snapchat_ui_clone/pages/primary_page.dart';
 import 'package:snapchat_ui_clone/style.dart';
+import 'package:snapchat_ui_clone/widgets/custom_scroll_behavior.dart';
 
 late List<CameraDescription> _cameras;
-
-List<CameraDescription> getCameras() {
-  return _cameras;
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +31,12 @@ class MyApp extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
       ),
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: CustomScrollBehavior(),
+          child: child!,
+        );
+      },
       home: const MainPage(),
     );
   }
@@ -49,10 +50,15 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _currentScreen = 2;
-  final PageController _pageController = PageController(initialPage: 2);
-
+  final PageController _pageController = PageController(initialPage: 1);
   CameraController? _cameraController;
+  int _mainPageIndex = 2;
+
+  void _onMainPageChanged(int index) {
+    setState(() {
+      _mainPageIndex = index;
+    });
+  }
 
   Future<void> initCamera({required bool frontCamera}) async {
     _cameraController =
@@ -92,73 +98,112 @@ class _MainPageState extends State<MainPage> {
       return;
     }
     initCamera(frontCamera: true);
+    _fetchNewMedia();
+  }
+
+  final List<Widget> _mediaList = [];
+  int currentPage = 0;
+  int? lastPage;
+
+  _handleScrollEvent(ScrollNotification scroll) {
+    if (scroll.metrics.pixels / scroll.metrics.maxScrollExtent > 0.33) {
+      if (currentPage != lastPage) {
+        _fetchNewMedia();
+      }
+    }
+  }
+
+  _fetchNewMedia() async {
+    lastPage = currentPage;
+    final PermissionState _ps = await PhotoManager.requestPermissionExtend();
+    if (_ps.isAuth) {
+      // success
+      //load the album list
+      List<AssetPathEntity> albums =
+          await PhotoManager.getAssetPathList(onlyAll: true);
+      List<AssetEntity> media = await albums[0]
+          .getAssetListPaged(size: 60, page: currentPage); //preloading files
+      List<Widget> temp = [];
+      for (var asset in media) {
+        temp.add(
+          FutureBuilder(
+            future: asset.thumbnailDataWithSize(const ThumbnailSize(400, 400)),
+            //resolution of thumbnail
+            builder:
+                (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Stack(
+                  children: <Widget>[
+                    Positioned.fill(
+                      child: Image.memory(
+                        snapshot.data!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    if (asset.type == AssetType.video)
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5, bottom: 5),
+                          child: Text(formatDuration(asset.videoDuration),
+                              style: const TextStyle(color: Style.whiteText)),
+                        ),
+                      )
+                  ],
+                );
+              }
+              return Container();
+            },
+          ),
+        );
+      }
+      setState(() {
+        _mediaList.addAll(temp);
+        currentPage++;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final iconColors = [
-      Style.greenNavbar,
-      Style.blueNavbar,
-      Style.yellowNavbar,
-      Style.purpleNavbar,
-      Style.redNavbar,
-    ];
-
     return Scaffold(
       backgroundColor: Style.black,
       body: PageView(
+        physics: _mainPageIndex == 2
+            ? const ClampingScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         controller: _pageController,
+        scrollDirection: Axis.vertical,
         onPageChanged: (int index) {
-          setState(() {
-            _currentScreen = index;
-          });
+          if (index == 0) {
+            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+          } else {
+            SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+          }
         },
-        children: <Widget>[
-          TempScreen(color: iconColors[0]),
-          const ChatsScreen(),
-          CameraScreen(
-              cameraController: _cameraController, initCamera: initCamera),
-          const StoriesScreen(),
-          TempScreen(color: iconColors[4]),
+        children: [
+          PrimaryPage(
+              cameraController: _cameraController,
+              initCamera: initCamera,
+              callback: _onMainPageChanged),
+          MemoriesPage(
+              mainPageController: _pageController,
+              mediaList: _mediaList,
+              handleScrollEvent: _handleScrollEvent,
+              fetchMedia: _fetchNewMedia),
         ],
       ),
-      bottomNavigationBar: SizedBox(
-        height: Platform.isIOS ? 90 : 60,
-        child: BottomNavigationBar(
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedItemColor: iconColors[_currentScreen],
-          unselectedItemColor: Style.white,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Style.black,
-          currentIndex: _currentScreen,
-          onTap: (int index) {
-            _pageController.jumpToPage(index);
-          },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.location),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.chat_bubble),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.camera),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people_alt_outlined),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.play),
-              label: '',
-            ),
-          ],
-        ),
-      ),
     );
+  }
+
+  static String formatDuration(Duration d) {
+    int hours = d.inHours;
+    int minutes = d.inMinutes - hours * 60;
+    int seconds = d.inSeconds - minutes * 60 - hours * 3600;
+    if (hours > 0) {
+      return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    } else {
+      return '$minutes:${seconds.toString().padLeft(2, '0')}';
+    }
   }
 }

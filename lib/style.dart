@@ -5,6 +5,8 @@ class Style {
   static const Color white = Colors.white;
   static const Color yellow = Color(0xffFFFC00);
   static const Color black = Colors.black;
+  static const Color gray1 = Color(0xffefefef);
+  static const Color gray2 = Color(0xffe5e5e5);
 
   // Navbar Colors
   static const Color greenNavbar = Color(0xff39CB8F);
@@ -22,6 +24,7 @@ class Style {
   static const Color blackText = Colors.black;
   static const Color whiteText = Colors.white;
   static const Color grayText = Color(0xff8f8f8f);
+  static const Color darkGrayText = Color(0xff565656);
 
   // Icon colors
   static Color cameraPageBackground = Colors.black.withOpacity(0.4);
@@ -129,6 +132,24 @@ class Style {
       fontSize: 18,
       color: whiteText,
       fontWeight: FontWeight.bold,
+    ),
+  );
+
+  // Used to calculate width of text. Color doesn't matter
+  static TextStyle memoriesStyle() => const TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+
+  static Widget memoriesSection(String text, int index, int currentScreen, var callback) => GestureDetector(
+    onTap: callback,
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        color: index == currentScreen ? blackText : grayText,
+        fontWeight: FontWeight.bold,
+      ),
     ),
   );
 }

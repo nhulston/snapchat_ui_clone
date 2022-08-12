@@ -44,8 +44,10 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-    <string>Allow camera permissions so Snapchat works properly?</string>
+    <string>Snapchat require camera permissions to work properly.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Allow microphone permissions so Snapchat works properly?</string>
+    <string>Snapchat requires microphone permissions to work properly.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Snapchat requires photo library access to work properly.</string>
 </dict>
 </plist>
